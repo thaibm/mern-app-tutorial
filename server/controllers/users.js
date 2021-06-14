@@ -6,7 +6,7 @@ import { createJWT } from '../utils/auth.js';
 const emailRegexp =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
-export const signup = (req, res, next) => {
+export const register = (req, res, next) => {
   let { name, email, password, passwordConfirmation } = req.body;
 
   // Validation
@@ -75,7 +75,7 @@ export const signup = (req, res, next) => {
     });
 };
 
-export const signin = (req, res) => {
+export const login = (req, res) => {
   let { email, password } = req.body;
   let errors = [];
   if (!email) {
@@ -118,7 +118,7 @@ export const signin = (req, res) => {
                   return res.status(200).json({
                     success: true,
                     token: access_token,
-                    message: user,
+                    message: 'Login successfully.',
                   });
                 }
               }
