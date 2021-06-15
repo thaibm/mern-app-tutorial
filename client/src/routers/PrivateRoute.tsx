@@ -4,7 +4,7 @@ import { Route, Redirect, RouteProps } from 'react-router-dom';
 import { RootState } from '../store';
 
 export interface PrivateRouteProps extends RouteProps {
-  isAuthenticated: boolean;
+  isAuthenticated?: boolean;
 }
 
 const PrivateRoute = ({
@@ -36,10 +36,13 @@ const PrivateRoute = ({
   }
 };
 
-const mapStateToProps = (state: RootState) => {
+const mapStateToProps = (state: RootState, ownProps: PrivateRouteProps) => {
   return {
+    ...ownProps,
     isAuthenticated: !!state.authentication.token,
-  } as PrivateRouteProps;
+  };
 };
 
-export default connect(mapStateToProps)(PrivateRoute);
+export default connect<PrivateRouteProps, {}, PrivateRouteProps, RootState>(
+  mapStateToProps
+)(PrivateRoute);
