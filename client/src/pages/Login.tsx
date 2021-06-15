@@ -9,17 +9,19 @@ import Container from '@material-ui/core/Container';
 import LoginForm, { ILoginFormInputs } from '../components/LoginForm';
 import { connect } from 'react-redux';
 import { loginAction } from '../store/authentication/authenticationActions';
+import { RootState } from '../store';
+import { useHistory } from 'react-router-dom';
 
 function Copyright(props: any) {
   return (
     <Typography
-      variant='body2'
-      color='text.secondary'
-      align='center'
+      variant="body2"
+      color="text.secondary"
+      align="center"
       {...props}
     >
       {'Copyright © '}
-      <Link color='inherit' href='https://github.com/thaibm'>
+      <Link color="inherit" href="https://github.com/thaibm">
         ncc.asia
       </Link>{' '}
       {new Date().getFullYear()}
@@ -28,12 +30,21 @@ function Copyright(props: any) {
   );
 }
 interface ILoginProps {
+  isAuthenticated: boolean;
   login: (payload: ILoginFormInputs) => void;
 }
 
-const Login = ({ login }: ILoginProps) => {
+const Login = ({ login, isAuthenticated }: ILoginProps) => {
+  const history = useHistory();
+
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      history.push('/');
+    }
+  }, [history, isAuthenticated]);
+
   return (
-    <Container component='main' maxWidth='xs'>
+    <Container component="main" maxWidth="xs">
       <CssBaseline />
 
       <Box
@@ -47,7 +58,7 @@ const Login = ({ login }: ILoginProps) => {
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component='h1' variant='h5'>
+        <Typography component="h1" variant="h5">
           Sign in
         </Typography>
 
@@ -59,4 +70,10 @@ const Login = ({ login }: ILoginProps) => {
   );
 };
 
-export default connect(null, { login: loginAction })(Login);
+const mapStateToProps = (state: RootState) => {
+  return {
+    isAuthenticated: !!state.authentication.token,
+  };
+};
+
+export default connect(mapStateToProps, { login: loginAction })(Login);

@@ -38,18 +38,18 @@ interface ICreateLoginFail {
 
 export const loginAction =
   (payload: ILoginFormInputs): ThunkResult<void> =>
-  async (dispatch) => {
-    handleCreateLogin(dispatch);
-    try {
-      const response: AxiosResponse<any> = await API.post(`/login`, {
-        email: payload.email,
-        password: payload.password,
-      });
-      handleCreateLoginSuccess(dispatch, response.data);
-    } catch (error) {
-      handleCreateLoginFail(dispatch, error);
-    }
-  };
+    async (dispatch) => {
+      handleCreateLogin(dispatch);
+      try {
+        const response: AxiosResponse<any> = await API.post(`/login`, {
+          email: payload.email,
+          password: payload.password,
+        });
+        handleCreateLoginSuccess(dispatch, response.data);
+      } catch (error) {
+        handleCreateLoginFail(dispatch, error);
+      }
+    };
 
 const handleCreateLogin = (dispatch: Dispatch<ICreateLogin>) => {
   dispatch({ type: AuthenticationActionTypes.LOGIN });
@@ -74,10 +74,7 @@ const handleCreateLoginFail = (
 
 // Logout
 export const logoutAction = (): ThunkResult<void> => async (dispatch) => {
-  console.log(
-    '🚀 ~ file: authenticationActions.ts ~ line 64 ~ logoutAction ~ dispatch',
-    dispatch
-  );
+  dispatch({ type: AuthenticationActionTypes.LOGOUT })
 };
 
 // Logins Action type
