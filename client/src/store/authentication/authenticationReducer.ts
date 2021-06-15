@@ -1,7 +1,10 @@
-import { AuthenticationActions, AuthenticationActionTypes } from './authenticationActions';
+import {
+  AuthenticationActions,
+  AuthenticationActionTypes,
+} from './authenticationActions';
 import { Reducer } from 'redux';
-
-export interface User {
+import jwt_decode from 'jwt-decode';
+export interface IUser {
   id: number;
   name: string;
   email: string;
@@ -9,28 +12,36 @@ export interface User {
 
 export interface AuthenticationState {
   token: string;
-  user: User;
+  user: IUser | null;
   loading: boolean;
   error: String | null;
 }
 
 const initialState = {
   token: '',
-  user: {} as User,
+  user: null,
   loading: false,
   error: null,
 };
 
-export const AuthenticationReducer: Reducer<AuthenticationState, AuthenticationActions> = (
-  state = initialState,
-  action
-) => {
+export const AuthenticationReducer: Reducer<
+  AuthenticationState,
+  AuthenticationActions
+> = (state = initialState, action) => {
   switch (action.type) {
     case AuthenticationActionTypes.LOGIN_SUCCESS:
+      localStorage.setItem('access-token', action.payload.token);
+      const response: { user: IUser } = jwt_decode(action.payload.token);
       return {
         ...state,
+        token: action.payload.token,
+        user: response.user,
         loading: false,
       };
+      
+    case AuthenticationActionTypes.LOGOUT:
+      localStorage.removeItem('access-token');
+      return { ...state, token: '', user: null };
 
     default:
       return state;

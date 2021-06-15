@@ -90,7 +90,7 @@ export const login = (req, res) => {
   if (errors.length > 0) {
     return res.status(422).json({ errors: errors });
   }
- 
+
   UserModel.findOne({ email: email })
     .then((user) => {
       if (!user) {
@@ -106,7 +106,10 @@ export const login = (req, res) => {
                 .status(400)
                 .json({ errors: [{ password: 'incorrect' }] });
             }
-            let access_token = createJWT(user, 3600);
+            let access_token = createJWT(
+              { id: user.id, name: user.name, email: user.email },
+              3600
+            );
             jwt.verify(
               access_token,
               process.env.TOKEN_SECRET,

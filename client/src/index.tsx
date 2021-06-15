@@ -5,12 +5,16 @@ import reportWebVitals from './reportWebVitals';
 import Routers from './routers/Routers';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { theme } from './theme';
+import { Provider } from 'react-redux';
+import { store } from './store';
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <Routers />
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <Routers />
+      </ThemeProvider>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
