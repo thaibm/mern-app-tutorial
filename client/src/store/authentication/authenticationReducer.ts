@@ -17,17 +17,21 @@ export interface AuthenticationState {
   error: String | null;
 }
 
-const initialState = {
-  token: '',
-  user: null,
-  loading: false,
-  error: null,
+const initialState = () => {
+  const token = localStorage.getItem('access-token') || '';
+  const { user }: { user: IUser } = jwt_decode(token);
+  return {
+    token,
+    user,
+    loading: false,
+    error: null,
+  }
 };
 
 export const AuthenticationReducer: Reducer<
   AuthenticationState,
   AuthenticationActions
-> = (state = initialState, action) => {
+> = (state = initialState(), action) => {
   switch (action.type) {
     case AuthenticationActionTypes.LOGIN_SUCCESS:
       localStorage.setItem('access-token', action.payload.token);
@@ -38,7 +42,7 @@ export const AuthenticationReducer: Reducer<
         user: response.user,
         loading: false,
       };
-      
+
     case AuthenticationActionTypes.LOGOUT:
       localStorage.removeItem('access-token');
       return { ...state, token: '', user: null };

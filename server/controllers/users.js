@@ -106,10 +106,12 @@ export const login = (req, res) => {
                 .status(400)
                 .json({ errors: [{ password: 'incorrect' }] });
             }
+            
             let access_token = createJWT(
               { id: user.id, name: user.name, email: user.email },
-              3600
+              1200
             );
+
             jwt.verify(
               access_token,
               process.env.TOKEN_SECRET,
